@@ -22,6 +22,4 @@ $router = new Router();
 $routes = require __DIR__ . '\App\routes.php';
 $router->run();
 
-# Load .Env File
-echo env('APP_NAME');
 ?>

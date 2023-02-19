@@ -26,7 +26,7 @@ class Database
         $this->db_name = Constants::DB_NAME;
         $this->port = Constants::DB_PORT;
 
-        $this->connect();
+        if (!empty($this->db_name)) $this->connect();
     }
 
     function connect()

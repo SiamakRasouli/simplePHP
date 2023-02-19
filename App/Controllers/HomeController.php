@@ -11,6 +11,6 @@ class HomeController extends Controller {
     }
 
     function index() {
-        echo view('home');
+        return view('index');
     }
 }
