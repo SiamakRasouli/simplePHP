@@ -13,5 +13,5 @@ function view($view, $data = '') {
     include base_path('\App\Views\loader.php');
 }
 function assets($assets) {
-    echo $_SERVER['REQUEST_URI'] . 'Themes/' . $assets;
+    echo '/Themes/' . $assets;
 }
