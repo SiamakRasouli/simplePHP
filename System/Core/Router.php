@@ -4,27 +4,26 @@ namespace System\Core;
 
 class Router
 {
-    protected $routes = [];
+    public $routes = [];
 
     public function get($uri, $controller) {
-        $this->bind('GET', $uri, $controller);
+        return $this->bind('GET', $uri, $controller);
     }
     
     public function post($uri, $controller) {
-        $this->bind('POST', $uri, $controller);
+        return $this->bind('POST', $uri, $controller);
     }
 
     public function delete($uri, $controller) {
-        $this->bind('DELETE', $uri, $controller);
+        return $this->bind('DELETE', $uri, $controller);
     }
     
     public function patch($uri, $controller) {
-        $this->bind('PATCH', $uri, $controller);
-        
+        return $this->bind('PATCH', $uri, $controller);
     }
     
     public function put($uri, $controller) {
-        $this->bind('PUT', $uri, $controller);
+        return $this->bind('PUT', $uri, $controller);
     }
 
     public function bind($method, $uri, $controller, $action = 'index') {
@@ -33,7 +32,14 @@ class Router
             'uri' => $uri,
             'controller' => $controller,
             'action' => $action,
+            'name' => NULL
         ];
+        return $this;
+    }
+
+    public function name($name) {
+        $this->routes[array_key_last($this->routes)]['name'] = $name;
+        return $this;
     }
 
     public function run(){
@@ -49,6 +55,16 @@ class Router
 
         if($callback === NULL) abort();
         return call_user_func($this->checkCallback($callback['controller']));
+    }
+
+    public function resolve($name) {
+        //$this->run();
+        dd($this->routes);
+        foreach($this->routes as $key => $route) {
+            if($route['name'] == $name) {
+                dd($key);
+            }
+        }
     }
 
     protected function checkCallback($callback){
