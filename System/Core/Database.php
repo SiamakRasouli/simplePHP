@@ -5,7 +5,6 @@ namespace System\Core;
 
 use PDO;
 use Exception;
-use App\Constants;
 
 class Database
 {
@@ -20,11 +19,11 @@ class Database
 
     function __construct()
     {
-        $this->server = Constants::DB_SERVER;
-        $this->username = Constants::DB_USERNAME;
-        $this->password = Constants::DB_PASSWORD;
-        $this->db_name = Constants::DB_NAME;
-        $this->port = Constants::DB_PORT;
+        $this->server = env('DB_SERVER');
+        $this->username = env('DB_USERNAME');
+        $this->password = env('DB_PASSWORD');
+        $this->db_name = env('DB_NAME');
+        $this->port = env('DB_PORT');
 
         if (!empty($this->db_name)) $this->connect();
     }
