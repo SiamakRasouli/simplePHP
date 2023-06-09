@@ -2,6 +2,9 @@
 
 use System\Core\Router;
 
-function route($name) {
-    (new Router)->run($name);
+function route($name)
+{
+    $router = new Router();
+    require base_path() . '\APP\routes.php';
+    return base_url() . $router->get_uri($name);
 }

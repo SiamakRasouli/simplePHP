@@ -57,12 +57,10 @@ class Router
         return call_user_func($this->checkCallback($callback['controller']));
     }
 
-    public function resolve($name) {
-        //$this->run();
-        dd($this->routes);
-        foreach($this->routes as $key => $route) {
-            if($route['name'] == $name) {
-                dd($key);
+    public function get_uri($name) {
+        foreach($this->routes as $route) {
+            if($route['name'] === $name) {
+                return $route['uri'];
             }
         }
     }
