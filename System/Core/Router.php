@@ -43,12 +43,12 @@ class Router
     }
 
     public function run(){
-        $requestURI = parse_url($_SERVER['REQUEST_URI']);
+        $requestURI = $this->returnURL();
         $method = isset($_GET['_method']) ? $_GET['_method'] : $_SERVER['REQUEST_METHOD'];
 
         $callback = null;
         foreach($this->routes as $route) {
-            if($requestURI['path'] === $route['uri'] && $method == $route['method']) {
+            if($requestURI === $route['uri'] && $method == $route['method']) {
                 $callback = $route;
             }
         }
@@ -70,5 +70,16 @@ class Router
             return [new $callback[0], $callback[1]];
         }
             return $callback;
+    }
+
+    protected function returnURL(){
+        $env_path = parse_url(env('APP_URL'));
+        $requestURI = parse_url($_SERVER['REQUEST_URI']);
+
+        if($env_path['path'] == $requestURI['path']) {
+            return '/';
+        } else {
+            return $requestURI['path'];
+        }
     }
 }
