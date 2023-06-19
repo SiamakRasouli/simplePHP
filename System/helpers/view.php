@@ -10,7 +10,7 @@ function view($view, $data = '') {
             dd('The Views only accepts Arrays!');
         }
     }
-    include base_path('\App\Views\loader.php');
+    include __DIR__ .'/../../App/Views/loader.php';
 }
 function assets($assets) {
     echo '/Themes/' . $assets;

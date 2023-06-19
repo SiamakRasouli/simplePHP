@@ -1,2 +1,2 @@
 <?php
-include base_path('\Themes\\' . $view . '.php');
+include __DIR__ . '/../../Themes/' . $view . '.php';
