@@ -1,0 +1,17 @@
+{
+    "name": "siamakr/simplephp",
+    "description": "A lightweight PHP framework",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Siamakr\\Simplephp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Siamak Rasouli"
+        }
+    ],
+    "require": {}
+}
