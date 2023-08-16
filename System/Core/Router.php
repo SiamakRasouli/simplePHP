@@ -74,9 +74,10 @@ class Router
 
     protected function returnURL(){
         $env_path = parse_url(env('APP_URL'));
+        $host = isset($env_path['host']) ? $env_path['host'] : $env_path['path'];
         $requestURI = parse_url($_SERVER['REQUEST_URI']);
 
-        if($env_path['path'] == $requestURI['path']) {
+        if($host == $requestURI['path']) {
             return '/';
         } else {
             return $requestURI['path'];
