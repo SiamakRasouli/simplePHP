@@ -3,6 +3,8 @@
 use System\Core\Router;
 use System\Core\Database;
 
+require_once 'vendor/autoload.php';
+
 spl_autoload_register(function ($class) {
     if(file_exists($class . '.class.php')) {
         include $class . '.class.php';
