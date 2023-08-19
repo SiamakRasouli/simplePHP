@@ -2,7 +2,10 @@
 
 namespace System\Core;
 
-class Model extends Database {
+use PDO;
+
+class Model extends Database
+{
 
     public $query = [];
 
@@ -20,7 +23,7 @@ class Model extends Database {
 
     function table($table = 'users')
     {
-        $this->query['table'] = " FROM {$table}";
+        $this->query['table'] = $table;
         return $this;
     }
 
@@ -28,7 +31,7 @@ class Model extends Database {
     {
         $temp = 'SELECT ';
         if (is_string($data)) {
-            $this->query['select'] = 'SELECT ' . $data;
+            $this->query['select'] = 'SELECT ' . $data . ' FROM ';
             return $this;
         }
 
@@ -46,6 +49,61 @@ class Model extends Database {
         return $this;
     }
 
+    function like($title, $match, $position = 'both'){
+        if($position == 'before') {
+            $match = "'{$match}%'";
+        } elseif($position == 'after') {
+            $match = "'%{$match}'";
+        } else {
+            $match = "'%{$match}%'";
+        }
+        $this->query['like'] = " WHERE {$title} LIKE {$match}";
+        return $this;
+    }
+
+    function update($column, $value = NULL)
+    {
+        $temp = '';
+        if($value == NULL) {
+            foreach($column as $key => $value){
+                if($key == 'submit') continue;
+                $temp .= $key . ' = \'' .  $value . '\'';
+                if (next($column) == true) {
+                    $temp .= ', ';
+                }
+            }
+            $query = 'UPDATE ' . $this->query["table"] . ' SET ' . $temp . $this->query["where"];
+        } else {
+            $query = 'UPDATE ' . $this->query["table"] . ' SET ' . $column . '=\'' . $value . '\'' . $this->query["where"];
+        }
+
+        $this->query($query);
+    }
+
+    function orderBy($column = 'id', $type = 'ASC'){
+        $this->query['orderby'] = " ORDER BY {$column} {$type}";
+        return $this;
+    }
+
+    function insert($data)
+    {
+        $cols = '';
+        $vals = '';
+        foreach ($data as $key => $d) :
+            if($key == 'submit') continue;
+            $cols .= $key;
+            $vals .= '\'' .  $d . '\'';
+            if (next($data) == true) {
+                $cols .= ',';
+                $vals .= ',';
+            }
+        endforeach;
+        
+        $query = "INSERT INTO " . $this->query['table'] . ' ('.$cols.') VALUES ('.$vals.')';
+
+        return $this->query($query);
+    }
+
     function limit($count, $start = 0)
     {
         $this->query['limit'] = " LIMIT {$start}, {$count}";
@@ -55,12 +113,15 @@ class Model extends Database {
     function get()
     {
         $query = '';
-        isset($this->query['select']) ? $query = $this->query['select']: '';
-        isset($this->query['table']) ? $query .= $this->query['table']: '';
-        isset($this->query['where']) ? $query .= $this->query['where']: '';
-        isset($this->query['limit']) ? $query .= $this->query['limit']: '';
+        isset($this->query['select']) ? $query = $this->query['select'] : $query = 'SELECT * FROM ';
+        isset($this->query['table']) ? $query .= $this->query['table'] : '';
+        isset($this->query['where']) ? $query .= $this->query['where'] : '';
+        isset($this->query['orderby']) ? $query .= $this->query['orderby'] : '';
+        isset($this->query['limit']) ? $query .= $this->query['limit'] : '';
+        isset($this->query['like']) ? $query .= $this->query['like'] : '';
 
-        return $this->query($query)->fetch();
+        
+
+        return $this->query($query)->fetchAll(PDO::FETCH_OBJ);
     }
-
 }
