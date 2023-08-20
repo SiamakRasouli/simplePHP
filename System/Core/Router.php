@@ -48,6 +48,7 @@ class Router
 
         $callback = null;
         foreach($this->routes as $route) {
+            $requestURI = rtrim($requestURI, '/');
             if($requestURI === $route['uri'] && $method == $route['method']) {
                 $callback = $route;
             }
