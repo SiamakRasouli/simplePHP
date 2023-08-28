@@ -44,11 +44,14 @@ class Router
 
     public function run(){
         $requestURI = $this->returnURL();
+
         $method = isset($_GET['_method']) ? $_GET['_method'] : $_SERVER['REQUEST_METHOD'];
 
         $callback = null;
         foreach($this->routes as $route) {
             $requestURI = rtrim($requestURI, '/');
+            $route['uri'] = rtrim($route['uri'], '/');
+
             if($requestURI === $route['uri'] && $method == $route['method']) {
                 $callback = $route;
             }
@@ -75,12 +78,14 @@ class Router
 
     protected function returnURL(){
         $env_path = parse_url(env('APP_URL'));
-        $host = isset($env_path['host']) ? $env_path['host'] : $env_path['path'];
+
+        $host = isset($env_path['path']) ? $env_path['host'] . $env_path['path'] : $env_path['host'];
         $requestURI = parse_url($_SERVER['REQUEST_URI']);
 
         if($host == $requestURI['path']) {
             return '/';
         } else {
+            if(isset($env_path['path'])) return str_replace($env_path['path'], '', $requestURI['path']);
             return $requestURI['path'];
         }
     }
