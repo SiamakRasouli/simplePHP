@@ -101,13 +101,22 @@ class Model extends Database
         
         $query = "INSERT INTO " . $this->query['table'] . ' ('.$cols.') VALUES ('.$vals.')';
 
-        return $this->query($query);
+        $this->query($query);
+        return $this->conn->lastInsertId();
     }
 
     function limit($count, $start = 0)
     {
         $this->query['limit'] = " LIMIT {$start}, {$count}";
         return $this;
+    }
+
+    function count($column= 'id'){
+        $query = "SELECT COUNT('{$column}') AS {$column} FROM " . $this->query['table'];
+
+        isset($this->query['where']) ? $query .= ' ' . $this->query['where'] : '';
+
+        return $this->query($query)->fetchColumn();
     }
 
     function get()
